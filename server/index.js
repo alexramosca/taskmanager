@@ -1,8 +1,20 @@
 const express = require('express');
 const app = express();
-const sequelize = require('sequelize');
+app.use(express.json());
 const db = require('./config/db')();
+const {DataTypes}= require('sequelize');
+const userModel = require('./models/users')(db)
+const taskModel = require('./models/tasks')(db)
+const relations = require('./models/relationships')(userModel, taskModel)
 
-app.listen(3000, ()=>{
-    console.log("Server is running on port 3000");
-})
+
+
+db.sync({alter: true})
+  .then(() => {
+    app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
+  })
+  .catch((error) => {
+    console.error("Database synchronization error:", error);
+  });
