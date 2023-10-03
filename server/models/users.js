@@ -10,7 +10,6 @@ module.exports = (sequelize) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       validade: {
         isEmail: true
       }
@@ -18,7 +17,6 @@ module.exports = (sequelize) => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         len: [5,15]
       }
@@ -33,6 +31,8 @@ module.exports = (sequelize) => {
       defaultValue: 'user',
       allowNull: false
     }
+  }, {
+    indexes:[{unique:true, fields: ['email', 'username']}]
   })
  
   return users;

@@ -58,6 +58,23 @@ router.post('/login', async (req, res)=>{
     }
 })
 
-
+router.delete('/delete', async (req, res)=>{
+    const user = req.body;
+    try{
+        const findUser = await User.findOne({where: {email: user.email}})
+        if(findUser != null){
+            findUser.destroy();
+            res.status(204).json({message: "Account deleted successfully"})
+        }
+        else {
+            res.status(404).send("User not Found")
+        }
+    }
+    catch(err){
+        res.status(500).json({message: err})
+    }
+    
+    
+})
 
 module.exports = router;
