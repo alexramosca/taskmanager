@@ -8,7 +8,7 @@ router.get('/', (req, res)=>{
     res.send("here the users");
 })
 
-router.post('/', async (req,res)=>{
+router.post('/', async (req, res)=>{
     const user = req.body;
     try{
         //hash password
@@ -34,5 +34,30 @@ router.post('/', async (req,res)=>{
    
 
 })
+
+router.post('/login', async (req, res)=>{
+    const user = req.body;
+    try{
+        const findUser = await User.findOne({where: {username: user.username}})
+        if (findUser == null){
+            res.status(400).json({message: "Username or password incorrect"})
+        }
+        else {
+            const isValid = await bcrypt.compare(user.password, findUser.password)
+            if(isValid){
+                res.status(200).json({message: "LOGIN SUCCESSFULLY"})
+            }
+            else {
+                res.status(403).json({message:"Invalid credentials!"})
+            }
+        }
+    }
+    catch(err){
+        res.status(500).json({error : err })
+        console.log(err)
+    }
+})
+
+
 
 module.exports = router;
