@@ -6,9 +6,9 @@ const Task = require('../models/tasks')(sequelize);
 const {validateToken} = require('./JWT');
 
 router.get('/', validateToken, async (req, res)=>{
-    const userId = req.query.userId; // Extract userId from query parameters
-    const storedId = req.user.userId;
-    if(storedId == userId){
+    
+    const userId = req.user.userId;
+    
         try{
             const listTaks = await Task.findAll({where: {userId: userId}});
             res.status(200).json(listTaks);
@@ -17,16 +17,20 @@ router.get('/', validateToken, async (req, res)=>{
             res.status(500).json({message: 'Error fetching data'});
             console.log(err);
         }
-    }
-    else {
-        res.status(403).json({message: 'Forbidden request'});
-    }
+    
+    
 })
 
-router.post('/', validateToken,async (req, res)=>{
+router.post('/create', validateToken,async (req, res)=>{
     const task = req.body;
+    const userId = req.user.userId;
     try {
-        const createTask = await Task.create(task);
+        const createTask = await Task.create({
+            userId: userId,
+            title: task.title,
+            description: task.description,
+            dueDate: task.dueDate
+        });
         res.status(200).json({message: "Task created succesfully"})
     }
     catch(err){
