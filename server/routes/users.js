@@ -49,7 +49,7 @@ router.post('/login', async (req, res)=>{
         else {
             const isValid = await bcrypt.compare(user.password, findUser.password)
             if(isValid){
-                const accessToken = createToken(user);
+                const accessToken = createToken(findUser);
                 res.cookie("access-token", accessToken, {
                     maxAge: 60*60*24*30*1000,
                     httpOnly: true,

@@ -7,8 +7,7 @@ app.use(cookieParser())
 
 
 
-//authentication
-const {createToken} = require('./routes/JWT');
+
 
 //routes
 const userRoute = require('./routes/users');

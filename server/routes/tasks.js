@@ -5,15 +5,21 @@ const Task = require('../models/tasks')(sequelize);
 //authentication
 const {validateToken} = require('./JWT');
 
-router.get('/', validateToken,async (req, res)=>{
+router.get('/', validateToken, async (req, res)=>{
     const userId = req.query.userId; // Extract userId from query parameters
-    try{
-        const listTaks = await Task.findAll({where: {userId: userId}});
-        res.status(200).json(listTaks);
+    const storedId = req.user.userId;
+    if(storedId == userId){
+        try{
+            const listTaks = await Task.findAll({where: {userId: userId}});
+            res.status(200).json(listTaks);
+        }
+        catch(err){
+            res.status(500).json({message: 'Error fetching data'});
+            console.log(err);
+        }
     }
-    catch(err){
-        res.status(500).json({message: 'Error fetching data'});
-        console.log(err);
+    else {
+        res.status(403).json({message: 'Forbidden request'});
     }
 })
 
