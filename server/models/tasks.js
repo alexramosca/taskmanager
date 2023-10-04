@@ -26,7 +26,7 @@ module.exports = (sequelize)=>{
         },
         status: {
             type: DataTypes.ENUM('Done', 'In-Progress', 'Expired'),
-            defaulValue: 'In-Progress'
+            defaultValue: 'In-Progress'
         },
         dueDate: {
             type: DataTypes.DATEONLY

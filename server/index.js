@@ -4,7 +4,9 @@ app.use(express.json());
 const db = require('./config/db')();
 //routes
 const userRoute = require('./routes/users');
+const taskRoute = require('./routes/tasks');
 app.use('/users', userRoute);
+app.use('/tasks', taskRoute);
 
 //models
 const userModel = require('./models/users')(db)
