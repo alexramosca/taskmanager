@@ -3,8 +3,16 @@ const router = express.Router();
 const sequelize = require('../config/db')();
 const Task = require('../models/tasks')(sequelize);
 
-router.get('/', (req, res)=>{
-    res.send("here your tasks");
+router.get('/', async (req, res)=>{
+    const userId = req.query.userId; // Extract userId from query parameters
+    try{
+        const listTaks = await Task.findAll({where: {userId: userId}});
+        res.status(200).json(listTaks);
+    }
+    catch(err){
+        res.status(500).json({message: 'Error fetching data'});
+        console.log(err);
+    }
 })
 
 router.post('/', async (req, res)=>{
