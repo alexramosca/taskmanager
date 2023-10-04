@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const sequelize = require('../config/db')();
 const Task = require('../models/tasks')(sequelize);
+//authentication
+const {validateToken} = require('./JWT');
 
-router.get('/', async (req, res)=>{
+router.get('/', validateToken,async (req, res)=>{
     const userId = req.query.userId; // Extract userId from query parameters
     try{
         const listTaks = await Task.findAll({where: {userId: userId}});
@@ -15,7 +17,7 @@ router.get('/', async (req, res)=>{
     }
 })
 
-router.post('/', async (req, res)=>{
+router.post('/', validateToken,async (req, res)=>{
     const task = req.body;
     try {
         const createTask = await Task.create(task);

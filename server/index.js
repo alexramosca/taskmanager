@@ -2,6 +2,14 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const db = require('./config/db')();
+const cookieParser = require('cookie-parser');
+app.use(cookieParser())
+
+
+
+//authentication
+const {createToken} = require('./routes/JWT');
+
 //routes
 const userRoute = require('./routes/users');
 const taskRoute = require('./routes/tasks');

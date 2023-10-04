@@ -4,11 +4,14 @@ const sequelize = require('../config/db')();
 const User = require('../models/users')(sequelize);
 const bcrypt = require('bcrypt');
 
-router.get('/', (req, res)=>{
+//authentication
+const {createToken, validateToken} = require('./JWT');
+
+router.get('/', validateToken, (req, res)=>{
     res.send("here the users");
 })
 
-router.post('/', async (req, res)=>{
+router.post('/register', async (req, res)=>{
     const user = req.body;
     try{
         //hash password
@@ -29,6 +32,7 @@ router.post('/', async (req, res)=>{
     }
     catch(err){
         res.status(500).json({message: "Internal error"});
+        console.log(err);
     }
     
    
@@ -45,6 +49,11 @@ router.post('/login', async (req, res)=>{
         else {
             const isValid = await bcrypt.compare(user.password, findUser.password)
             if(isValid){
+                const accessToken = createToken(user);
+                res.cookie("access-token", accessToken, {
+                    maxAge: 60*60*24*30*1000,
+                    httpOnly: true,
+                });
                 res.status(200).json({message: "LOGIN SUCCESSFULLY"})
             }
             else {
