@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const db = require('./config/db')();
+const cors = require('cors')
+app.use(cors())
 const cookieParser = require('cookie-parser');
 app.use(cookieParser())
 app.use(express.static('public'));
@@ -20,6 +22,10 @@ app.get('/login', (req, res)=>{
 
 app.get('/signup', (req, res)=>{
   res.sendFile((__dirname + "/public/register.html"))
+})
+
+app.get('/home', (req, res)=>{
+  res.sendFile((__dirname + '/public/home.html'))
 })
 
 //models
