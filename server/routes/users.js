@@ -18,15 +18,25 @@ router.post('/register', async (req, res)=>{
         const hashedPass = await bcrypt.hash(user.password, 10);
         const hasUserEmail = await User.findOne({where: {email: user.email}})
         const hasUserUsername = await User.findOne({where: {username: user.username}})
-        if(hasUserEmail==null && hasUserUsername==null){
-            const createUser = await User.create({
-                email: user.email,
-                username: user.username,
-                password: hashedPass
-            });
-            res.status(200).json({email: user.email, username: user.username});
-        }else{
-            res.status(401).json({message: "User already exist"})
+        if(hasUserEmail){
+            res.status(400).json({error: "email", message: "email already exists"})
+        }
+        else if (hasUserUsername){
+            res.status(401).json({error: "username", message: "Username already exists"})
+        }
+        else{
+            try{
+                const createUser = await User.create({
+                    email: user.email,
+                    username: user.username,
+                    password: hashedPass
+                });
+                res.status(200).json({email: user.email, username: user.username});
+            }
+            catch(err){
+                console.log(err)
+            }
+            
         }
         
     }
