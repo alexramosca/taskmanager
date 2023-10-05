@@ -1,0 +1,30 @@
+.black{
+    background-color: rgb(82, 141, 85);
+   }
+   .darkG{
+    background-color: rgb(20, 61, 23);
+   }
+
+   .vh-60 {
+    height: 60vh;
+   }
+
+   .vh-80 {
+    height: 80vh;
+   }
+   
+   .custom-vw{
+    width: 100vw;
+   }
+   .custom-heigh{
+    height: 50%;
+   }
+   .btn{
+    border-radius: none !important;
+   }
+   @media (min-width: 1200px) {
+    .custom-vw{
+    width: 30vw;
+   
+}
+}
