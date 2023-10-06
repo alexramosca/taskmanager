@@ -26,6 +26,9 @@
     font-weight: bold;
     color: red;
    }
+   .bottom-border{
+    border-bottom: solid 1px blue;
+   }
    @media (min-width: 1200px) {
     .custom-vw{
     width: 30vw;

@@ -6,7 +6,16 @@ const cors = require('cors')
 app.use(cors())
 const cookieParser = require('cookie-parser');
 app.use(cookieParser())
-app.use(express.static('public'));
+
+
+//allow requests from my locahost
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000/home.html');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 
 
 //routes
@@ -27,7 +36,7 @@ app.get('/signup', (req, res)=>{
 app.get('/home', (req, res)=>{
   res.sendFile((__dirname + '/public/home.html'))
 })
-
+app.use(express.static('public'));
 //models
 const userModel = require('./models/users')(db)
 const taskModel = require('./models/tasks')(db)
