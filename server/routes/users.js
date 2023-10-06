@@ -95,6 +95,13 @@ router.delete('/delete', async (req, res)=>{
     }
     
     
+    
+})
+
+router.get('/logout', (req, res)=>{
+    
+    res.clearCookie('access-token');
+    res.send(200).json("logged out")
 })
 
 module.exports = router;
