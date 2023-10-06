@@ -9,6 +9,7 @@ const createToken = (user)=>{
 
 const validateToken = (req, res, next)=>{
     const accessToken = req.cookies["access-token"];
+    console.log(accessToken);
     if(!accessToken) return res.status(401).json({message: "unauthorized"})
     else {
         try {

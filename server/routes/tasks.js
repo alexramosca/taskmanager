@@ -21,7 +21,7 @@ router.get('/', validateToken, async (req, res)=>{
     
 })
 
-router.post('/create', validateToken,async (req, res)=>{
+router.post('/create', validateToken, async (req, res)=>{
     const task = req.body;
     const userId = req.user.userId;
     try {

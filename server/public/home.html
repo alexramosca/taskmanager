@@ -10,20 +10,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script defer src="homeScript.js"></script>
 </head>
-<body>
+<body class="vh-100">
     <div class="row d-flex justify-content-between">
-        <div class="col-1">Home</div>
-        <div id="btnLogOut" class="col-1 ml-5 ">Log Out</div>
+        <div class="col-3 text-center">Home</div>
+        <div id="btnLogOut" class="col-3 text-center btnLogOut">Log Out</div>
     </div>
-    <div id="taskDump" class="container">
-        <div class="row bg-primary text-white">
+        <div class="div  d-flex flex-column vh-80 justify-content-center align-items-center">
+        <div style="width: 50vw;" id="taskDump">
+        <div class="row bg-primary text-center text-white">
             <div class="col">#Task Id</div>
             <div class="col">Title</div>
             <div class="col">Description</div>
             <div class="col">Status</div>
             <div class="col">Due Date</div>
         </div>
-        
-    </div>
+        </div>
+    '</div>
+    
+    
 </body>
 </html>

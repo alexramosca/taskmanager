@@ -22,11 +22,8 @@ async function  generateTasks(){
                  
                  $("#taskDump").append(content);
             });
-            
-        }
-        else {
-            window.location.href = '/login.html'
-        }
+    
+        } 
         
     }
     catch(err){
