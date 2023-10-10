@@ -135,15 +135,23 @@ async function addTask(){
                 credentials: 'include',
                 body: JSON.stringify(data)
             })
+            if(!insertTask.ok){
+                const error = await insertTask.json()
+                alert(error.message);
+                $("#txtAddDueDate").focus()
+            }
+            else {
+                $("#txtAddDueDate").val("");
+                $("#txtAddTitle").val("");
+                $("#txtAddDesc").val("");
+                generateTasks();
+            }
         }
         catch(err){
             console.log(err);
         }
 
-        $("#txtAddDueDate").val("");
-        $("#txtAddTitle").val("");
-        $("#txtAddDesc").val("");
-        generateTasks();
+       
     }
     else {
         alert("Please fill all fields");

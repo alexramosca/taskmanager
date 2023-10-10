@@ -27,19 +27,34 @@ router.get('/', validateToken, async (req, res)=>{
 router.post('/create', validateToken, async (req, res)=>{
     const task = req.body;
     const userId = req.user.userId;
-    try {
-        const createTask = await Task.create({
-            userId: userId,
-            title: task.title,
-            description: task.description,
-            dueDate: task.dueDate
-        });
-        res.status(200).json({message: "Task created succesfully"})
+    const today = new Date()
+    const testDate = new Date(req.body.dueDate)
+
+    today.setUTCHours(0, 0 , 0 , 0)
+    testDate.setUTCHours(1,0,0,0)
+    console.log(today)
+    if (testDate < today){
+        return res.status(400).json({message: "Dates in past are not allowed"})
     }
-    catch(err){
-        res.status(401).json({error:"Error creating the task"});
-        console.log(err)
+    else {
+
+        try {
+            const createTask = await Task.create({
+                userId: userId,
+                title: task.title,
+                description: task.description,
+                dueDate: task.dueDate
+            });
+            res.status(200).json({message: "Task created succesfully"})
+        }
+        catch(err){
+            res.status(401).json({error:"Error creating the task"});
+            console.log(err)
+        }
+
     }
+    
+    
     
 })
 router.delete('/delete', validateToken, async (req, res)=>{
