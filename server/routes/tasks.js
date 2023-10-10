@@ -42,7 +42,7 @@ router.post('/create', validateToken, async (req, res)=>{
     }
     
 })
-router.post('/delete', validateToken, async (req, res)=>{
+router.delete('/delete', validateToken, async (req, res)=>{
     const taskId = req.body.taskId;
     try{
         const deleteTask = await Task.destroy({where: {taskId: taskId}})
