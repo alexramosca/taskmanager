@@ -42,5 +42,21 @@ router.post('/create', validateToken, async (req, res)=>{
     }
     
 })
+router.post('/delete', validateToken, async (req, res)=>{
+    const taskId = req.body.taskId;
+    try{
+        const deleteTask = await Task.destroy({where: {taskId: taskId}})
+        if(deleteTask)
+            res.status(200).json('Deleted successfully!');
+        else
+            res.status(304).send();
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({message: "Internal Error"})
+    }
+
+
+})
 
 module.exports = router;
