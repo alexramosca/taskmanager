@@ -10,8 +10,11 @@ router.get('/', validateToken, async (req, res)=>{
     const userId = req.user.userId;
     
         try{
-            const listTaks = await Task.findAll({where: {userId: userId}});
-            res.status(200).json(listTaks);
+            const listTasks = await Task.findAll({
+                where: { userId: userId },
+                order: [['dueDate', 'ASC']] // Corrected order option
+              });
+              res.status(200).json(listTasks);
         }
         catch(err){
             res.status(500).json({message: 'Error fetching data'});

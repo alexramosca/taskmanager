@@ -1,9 +1,7 @@
 .black{
-    background-color: rgb(82, 141, 85);
+    background-color: rgb(69, 69, 69);
    }
-   .darkG{
-    background-color: rgb(20, 61, 23);
-   }
+   
 
    .vh-60 {
     height: 60vh;
@@ -35,6 +33,7 @@
    .pc-100{
     height: 100%;
    }
+   
    @media (min-width: 1200px) {
     .custom-vw{
     width: 30vw;
