@@ -14,6 +14,29 @@ $("#btnLogOut").click(logOut);
 
 
 
+function enableTaskCreator(){
+    const content = `
+    <form class="TaskAddForm">
+    <div class='card-header pointer bg-white d-flex justify-content-between align-items-center'>
+        <svg id="btnAddTask" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+          </svg>
+        <input type="date" id="txtAddDueDate" class="form-control" placeholder="Due date"></div>
+    <div class='card-body'>
+        
+        <h5 class="card-title form-control">
+            <input id="txtAddTitle" class="form-control" type="text" placeholder="Title"></h5>
+        <p class="card-text form-control">
+            <input id="txtAddDesc" class="form-control" type="text" placeholder="Description"></p>
+        </form>
+    `
+    $("#taskCreator").html(content)
+    $("#taskCreator").removeClass("d-flex justify-content-center align-items-center")
+    $("#taskCreator").off("click")
+     $("#btnAddTask").click(addTask);
+     
+}
 async function  generateTasks(){
     $("#taskDump").html("");
     try{
@@ -24,21 +47,11 @@ async function  generateTasks(){
         if(response.ok){
             const responseJson = await response.json();
             const formAddTask = `
-            <div class='card mr-1 mt-3 mb-3 col-sm-4'>
-            <form class="TaskAddForm">
-            <div class='card-header pointer bg-white d-flex justify-content-between align-items-center'>
-                <svg id="btnAddTask" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                  </svg>
-                <input type="date" id="txtAddDueDate" class="form-control" placeholder="Due date"></div>
-            <div class='card-body'>
-                
-                <h5 class="card-title form-control">
-                    <input id="txtAddTitle" class="form-control" type="text" placeholder="Title"></h5>
-                <p class="card-text form-control">
-                    <input id="txtAddDesc" class="form-control" type="text" placeholder="Description"></p>
-                </form>
+            <div id="taskCreator" class='card mr-1 mt-3 mb-3 col-sm-4 pointer d-flex justify-content-center align-items-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="86" height="86" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
+                <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"/>
+                <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+                </svg>
             </div>
     
         </div>
@@ -46,10 +59,8 @@ async function  generateTasks(){
             `
             
              $("#taskDump").append(formAddTask)
-             $("#txtAddDueDate").keydown((e)=>{
-                e.preventDefault();
-            })
-             $("#btnAddTask").click(addTask);
+             $("#taskCreator").click(enableTaskCreator);
+             
 
              let colorCard = "";
 
