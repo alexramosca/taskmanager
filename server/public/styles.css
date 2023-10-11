@@ -34,7 +34,9 @@
     height: 100%;
    }
 
-
+.pointer:hover{
+    cursor: pointer;
+}
    
    @media (min-width: 1200px) {
     .custom-vw{

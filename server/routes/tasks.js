@@ -74,4 +74,17 @@ router.delete('/delete', validateToken, async (req, res)=>{
 
 })
 
+router.patch('/done', async (req, res)=>{
+    const taskId = req.body.taskId
+    const findTask = await Task.findOne({where: {taskId: taskId}})
+    if(!findTask){
+        res.status(404).json("No task found")
+    }
+    else {
+        findTask.status = "Done";
+        await findTask.save();
+        res.status(200).json({message: "Task updated succefully"})
+    }
+})
+
 module.exports = router;
