@@ -14,9 +14,17 @@ $("#btnLogOut").click(logOut);
 
 
 
+
+
 function enableTaskCreator(){
+    //it's placed here to keep track of the enter button only when the form is enabled
+    $(document).on("keydown", (e)=>{
+        if(e.keyCode === 13 || e.which == 13){
+            addTask()
+        }
+    })
     const content = `
-    <form class="TaskAddForm col-5 card">
+    <form  class="TaskAddForm col-5 card ">
     <div class='card-header pointer bg-white d-flex justify-content-between align-items-center'>
         <svg id="btnAddTask" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -36,6 +44,7 @@ function enableTaskCreator(){
     $("#taskCreator").addClass('card')
     $("#divBtnAddTask").off("click")
      $("#btnAddTask").click(addTask);
+     $("#txtAddTitle").focus();
      
 }
 async function  generateTasks(){
@@ -62,6 +71,18 @@ async function  generateTasks(){
             
              $("#divBtnAddTask").html(formAddTask)
              $("#divBtnAddTask").click(enableTaskCreator);
+             
+             if($("#taskCreator")){
+                $(document).off('keydown');
+                $(document).one('keyup', (e)=>{
+                    if(e.keyCode === 13 ||e.which == 13){
+                        enableTaskCreator();
+
+                       
+                    } 
+                })
+             }
+             
              
 
              let colorCard = "";
@@ -152,12 +173,14 @@ async function addTask(){
                 const error = await insertTask.json()
                 alert(error.message);
                 $("#txtAddDueDate").focus()
+                return false
             }
             else {
                 $("#txtAddDueDate").val("");
                 $("#txtAddTitle").val("");
                 $("#txtAddDesc").val("");
                 generateTasks();
+                return true;
             }
         }
         catch(err){
