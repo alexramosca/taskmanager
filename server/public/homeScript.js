@@ -15,9 +15,16 @@ const modal = document.querySelector("#modal");
 const mdlForm = document.getElementById('mdlAddTaskForm');
 mdlForm.addEventListener('submit', (e)=>{
     e.preventDefault();
-    updateTask()
+    if(!$("#mdlTaskId").hasClass('hidden')){
+        updateTask()
+    }
+    else {
+        addTask()
+    }
+    
     modal.style.opacity = 0;
     modal.close()
+    
     
 })
 
@@ -90,8 +97,6 @@ async function  generateTasks(){
                 $(document).one('keyup', (e)=>{
                     if(e.keyCode === 13 ||e.which == 13){
                         showEditTask();
-
-                       
                     } 
                 })
              }
@@ -102,55 +107,8 @@ async function  generateTasks(){
              //Cleaning the global array
              arrTasks.length = 0;
             /////////////CREATES THE TASKS STORED IN THE DATABASE
-            responseJson.forEach(element => { 
-                if(element.status === 'In-Progress'){
-                    colorCard = 'bg-warning';
-                }
-                else if (element.status === 'Done'){
-                    colorCard = 'bg-success';
-                }
-                else {
-                    colorCard = 'bg-danger'
-                }
-                arrTasks.push(element);
-
-                const content = `
-                
-                <div class='card taskDiv text-center mx-2 my-2 col-12 col-md-3 '>
-                    
-                        <div class='card-header ${colorCard} text-white d-flex justify-content-between align-items-center'>
-                            <span class="date">${element.dueDate}</span>
-
-
-                            <div>
-                                
-                                <svg onclick="finishTask(${element.taskId})" class="pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                                </svg>
-
-                                <svg onclick="showEditTask(${element.taskId}, 'Edit')" class="pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                </svg>
-
-                                <svg onclick="deleteTask(${element.taskId})" class="pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-                                </svg>
-                            </div>
-                        </div>
-                        
-                    
-                    <div class='card-body'>
-                        
-                         <h5 class="card-title">${element.title}</h5>
-                         <p class="card-text">${element.description}</p>
-
-                    </div>
-            
-                </div>
-                
-                `
-                 $("#taskDump").append(content);
+            responseJson.forEach(element => {
+                 addTaskUI(element)
             });
     
         } 
@@ -171,12 +129,12 @@ async function logOut(){
 }
 
 async function addTask(){
-        if(!Validator.isEmpty('#txtAddDueDate') &&
-        !Validator.isEmpty('#txtAddTitle') &&
-        !Validator.isEmpty('#txtAddDesc')){
-        const dueDate = $("#txtAddDueDate").val();
-        const title = $("#txtAddTitle").val();
-        const description = $("#txtAddDesc").val();
+        if(!Validator.isEmpty('#mdlDueDate') &&
+        !Validator.isEmpty('#mdlTitle') &&
+        !Validator.isEmpty('#mdlDesc')){
+        const dueDate = $("#mdlDueDate").val();
+        const title = $("#mdlTitle").val();
+        const description = $("#mdlDesc").val();
 
         const data = {
             title: title,
@@ -191,6 +149,8 @@ async function addTask(){
                 credentials: 'include',
                 body: JSON.stringify(data)
             })
+            const responseData = await insertTask.json()
+            
             if(!insertTask.ok){
                 const error = await insertTask.json()
                 alert(error.message);
@@ -198,10 +158,11 @@ async function addTask(){
                 return false
             }
             else {
-                $("#txtAddDueDate").val("");
-                $("#txtAddTitle").val("");
-                $("#txtAddDesc").val("");
-                generateTasks();
+                
+               // generateTasks();
+               addTaskUI(responseData.task)
+                
+
                 return true;
             }
         }
@@ -216,7 +177,61 @@ async function addTask(){
     }
 }
 
+function addTaskUI(responseData){
+    if(responseData.status === 'In-Progress'){
+        colorCard = 'bg-warning';
+    }
+    else if (responseData.status === 'Done'){
+        colorCard = 'bg-success';
+    }
+    else {
+        colorCard = 'bg-danger'
+    }
+    arrTasks.push(responseData);
+
+    const content = `
+    
+    <div id="task${responseData.taskId}" class='card taskDiv text-center mx-2 my-2 col-12 col-md-3 '>
+        
+            <div class='card-header ${colorCard} text-white d-flex justify-content-between align-items-center'>
+                <span class="date">${responseData.dueDate}</span>
+
+
+                <div>
+                    
+                    <svg onclick="finishTask(${responseData.taskId})" class="pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+
+                    <svg onclick="showEditTask(${responseData.taskId}, 'Edit')" class="pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg>
+
+                    <svg onclick="deleteTask(${responseData.taskId})" class="pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                    </svg>
+                </div>
+            </div>
+            
+        
+        <div class='card-body'>
+            
+             <h5 class="card-title">${responseData.title}</h5>
+             <p class="card-text">${responseData.description}</p>
+
+        </div>
+
+    </div>
+    
+    `
+    $("#taskDump").append(content);
+}
+
+
+
 async function deleteTask(taskId){
+    console.log(arrTasks)
     
     try{
         const data = {
@@ -229,7 +244,17 @@ async function deleteTask(taskId){
             body: JSON.stringify(data)
         })
         if(deleteTask.ok){
-            generateTasks();
+            //generateTasks();
+            $(`#task${taskId}`).remove();
+            
+            
+            const index = arrTasks.findIndex(element => element.taskId === taskId);
+            // If found, remove it from the array
+            if (index !== -1) {
+                arrTasks.splice(index, 1);
+            }
+            console.log(arrTasks)
+
         }
     }
     catch(err){
@@ -258,6 +283,8 @@ async function deleteTask(taskId){
         
     }
     else{
+        const today = new Date()
+        $("#mdlDueDate").val()
         $("#mdlTaskId").addClass('hidden')
     }
     
@@ -269,7 +296,6 @@ async function updateTask(){
     const newDueDate = $("#mdlDueDate").val()
     const newTitle = $("#mdlTitle").val()
     const newDesc = $("#mdlDesc").val()
-    console.log(taskId)
     try{
         const data = {
             taskId: taskId,
@@ -278,15 +304,15 @@ async function updateTask(){
             description: newDesc
             
         }
-        const deleteTask = await fetch('http://localhost:3000/tasks/update', {
+        const updateTask = await fetch('http://localhost:3000/tasks/update', {
             method: 'PATCH',
             headers:{'Content-Type': 'application/json'},
             credentials: 'include',
             body: JSON.stringify(data)
         })
-        if(deleteTask.ok){
+        if(updateTask.ok){
             generateTasks();
-            console.log("counting")
+            
         }
     }
     catch(err){

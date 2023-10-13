@@ -45,7 +45,7 @@ router.post('/create', validateToken, async (req, res)=>{
                 description: task.description,
                 dueDate: task.dueDate
             });
-            res.status(200).json({message: "Task created succesfully"})
+            res.status(200).json({message: "Task created succesfully", task: createTask})
         }
         catch(err){
             res.status(401).json({error:"Error creating the task"});
