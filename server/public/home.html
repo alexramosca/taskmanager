@@ -12,6 +12,7 @@
 </head>
 <body class="vh-100 d-flex flex-column">
    
+
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container-fluid">
               <a class="navbar-brand" href="javascript:void(0)">Logo</a>
@@ -42,8 +43,19 @@
               </div>
             </div>
           </nav>
+          <dialog id="modal">
+            <form id="mdlAddTaskForm" class=" d-flex flex-column justify-content-center">
+              <input type="text" class=" text-center form-control my-2 hidden" disabled id="mdlTaskId">
+              <input id="mdlDueDate" class=" form-control my-2" type="date">
+              <input id="mdlTitle" class="form-control my-2" type="text" placeholder="Title">
+              <input id="mdlDesc" class="form-control my-2" type="text" placeholder="Description">
+              <input type="submit" value="Submit" class="btn btn-dark">
+            </form>
+          </dialog>
        
         <div  class="container">
+          
+          
             <div id="divBtnAddTask" class="row border justify-content-center align-items-center"></div>
             <div id="taskDump" class="row justify-content-between border align-items-center">
                 

@@ -74,6 +74,25 @@ router.delete('/delete', validateToken, async (req, res)=>{
 
 })
 
+router.patch('/update', async(req, res)=>{
+    const task = req.body;
+    try{
+        const findTask = await Task.findOne({where: {taskId: task.taskId}})
+        if(findTask){
+            findTask.title = task.title
+            findTask.description = task.description
+            findTask.dueDate = task.dueDate
+
+            await findTask.save()
+
+            res.status(200).json({message: "Task updated successfully"})
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+})
+
 router.patch('/done', async (req, res)=>{
     const taskId = req.body.taskId
     const findTask = await Task.findOne({where: {taskId: taskId}})

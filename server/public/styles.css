@@ -37,6 +37,36 @@
 .pointer:hover{
     cursor: pointer;
 }
+#modal{
+    position: relative;
+    gap: 2px;
+    z-index: 9999;
+    width: 25vw;
+    min-width: 30vh;
+    aspect-ratio: 1/0.75;
+    min-height: 30vh;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+#modal>form{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20vw;
+    min-width: 25vh;
+}
+.hidden{
+    display: none !important;
+}
+.show{
+    display: block;
+}
+
+
+#modal::backdrop{
+    background-color: rgba(0,0,0,.7);
+}
    
    @media (min-width: 1200px) {
     .custom-vw{
