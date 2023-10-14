@@ -7,6 +7,26 @@ class Validator {
         }
         return false;
     }
+    static checkDate(date){
+        let today = new Date()
+        date = new Date(date)
+        console.log(date)
+        today.setUTCHours(0,0,0,0)
+        date.setUTCHours(1,1,1,1)
+        if(date < today){
+            return false
+        }
+        else {
+            return true
+        }
+        
+    }
+    static checkLength(id, min, max){
+        let input = $(`#${id}`).val()
+        if(input.length < min || input.length > max)
+            return false
+        return true
+    }
 }
 
 //events listeners
@@ -14,16 +34,50 @@ $("#btnLogOut").click(logOut);
 const modal = document.querySelector("#modal");
 const mdlForm = document.getElementById('mdlAddTaskForm');
 mdlForm.addEventListener('submit', (e)=>{
+    let isValid = true;
     e.preventDefault();
-    if(!$("#mdlTaskId").hasClass('hidden')){
-        updateTask()
+    clearTags("errDate", "errTitle", "errDesc")
+
+    if(Validator.isEmpty("#mdlDueDate")){
+        $("#errDate").html("Please insert a valid date")
+        isValid = false
     }
-    else {
-        addTask()
+    else if (!Validator.checkDate($("#mdlDueDate").val())){
+        $("#errDate").html("Dates in past are not allowed, please try again")
+        isValid = false
+    }
+    if(!Validator.checkLength("mdlTitle", 5, 18)){
+        $("#errTitle").html("The Title field must be between 5 and 18 characters")
+        isValid = false
+    }
+    if(!Validator.checkLength("mdlDesc", 5, 30)){
+        $("#errDesc").html("The Description field must be between 5 and 30 characters")
+        isValid = false
     }
     
-    modal.style.opacity = 0;
-    modal.close()
+    if(isValid){
+        if(!$("#mdlTaskId").hasClass('hidden')){
+            updateTask()
+        }
+        else {
+            addTask()
+        }
+        clearControls(["mdlDueDate", "mdlTitle", "mdlDesc"])
+        modal.style.opacity = 0;
+        modal.close()
+    }
+
+function clearControls(ids){
+    ids.forEach((element)=>{
+        $(`#${element}`).val("")
+    })
+}
+function clearTags(...ids){
+    ids.forEach((element)=>{
+        $(`#${element}`).html("")
+    })
+}
+    
     
     
 })
@@ -194,7 +248,7 @@ function addTaskUI(responseData){
     <div id="task${responseData.taskId}" class='card taskDiv text-center mx-2 my-2 col-12 col-md-3 '>
         
             <div class='card-header ${colorCard} text-white d-flex justify-content-between align-items-center'>
-                <span class="date">${responseData.dueDate}</span>
+                <span id='cardDueDate${responseData.taskId}' class="date">${responseData.dueDate}</span>
 
 
                 <div>
@@ -217,8 +271,8 @@ function addTaskUI(responseData){
         
         <div class='card-body'>
             
-             <h5 class="card-title">${responseData.title}</h5>
-             <p class="card-text">${responseData.description}</p>
+             <h5 id='cardTitle${responseData.taskId}' class="card-title">${responseData.title}</h5>
+             <p id='cardDesc${responseData.taskId}' class="card-text">${responseData.description}</p>
 
         </div>
 
@@ -310,14 +364,22 @@ async function updateTask(){
             credentials: 'include',
             body: JSON.stringify(data)
         })
+        const responseData = await updateTask.json()
         if(updateTask.ok){
-            generateTasks();
+            
+            updateTaskUI(responseData.task)
             
         }
     }
     catch(err){
         console.log(err)
     }
+}
+
+function updateTaskUI(responseData){
+    $(`#cardDueDate${responseData.taskId}`).html(responseData.dueDate)
+    $(`#cardTitle${responseData.taskId}`).html(responseData.title)
+    $(`#cardDesc${responseData.taskId}`).html(responseData.description)
 }
 
 async function finishTask(taskId){

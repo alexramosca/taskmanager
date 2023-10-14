@@ -44,7 +44,7 @@
     width: 25vw;
     min-width: 30vh;
     aspect-ratio: 1/0.75;
-    min-height: 30vh;
+    min-height: 48vh;
     opacity: 0;
     transition: opacity 0.5s ease;
 }

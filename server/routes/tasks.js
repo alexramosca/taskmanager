@@ -24,16 +24,26 @@ router.get('/', validateToken, async (req, res)=>{
     
 })
 
+function checkingDates(date){
+    let today = new Date()
+    today.setUTCHours(0, 0 , 0 , 0)
+    date.setUTCHours(1,1,1,1)
+    if(date < today){
+        return false
+    }
+    return true
+
+}
 router.post('/create', validateToken, async (req, res)=>{
     const task = req.body;
     const userId = req.user.userId;
     const today = new Date()
     const testDate = new Date(req.body.dueDate)
-
-    today.setUTCHours(0, 0 , 0 , 0)
+   /* today.setUTCHours(0, 0 , 0 , 0)
     testDate.setUTCHours(1,0,0,0)
-    console.log(today)
-    if (testDate < today){
+    console.log(today)*/
+    
+    if (!checkingDates(testDate)){
         return res.status(400).json({message: "Dates in past are not allowed"})
     }
     else {
@@ -77,15 +87,21 @@ router.delete('/delete', validateToken, async (req, res)=>{
 router.patch('/update', async(req, res)=>{
     const task = req.body;
     try{
-        const findTask = await Task.findOne({where: {taskId: task.taskId}})
-        if(findTask){
-            findTask.title = task.title
-            findTask.description = task.description
-            findTask.dueDate = task.dueDate
+        const testDate = new Date(task.dueDate)
+        if(checkingDates(testDate)){
+            const findTask = await Task.findOne({where: {taskId: task.taskId}})
+            if(findTask){
+                findTask.title = task.title
+                findTask.description = task.description
+                findTask.dueDate = task.dueDate
 
-            await findTask.save()
+                await findTask.save()
 
-            res.status(200).json({message: "Task updated successfully"})
+                res.status(200).json({message: "Task updated successfully", task: findTask})
+            }
+        }
+        else {
+            res.status(406).json({message: "Dates in past are not allowed"})
         }
     }
     catch(err){

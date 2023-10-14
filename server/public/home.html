@@ -46,9 +46,20 @@
           <dialog id="modal">
             <form id="mdlAddTaskForm" class=" d-flex flex-column justify-content-center">
               <input type="text" class=" text-center form-control my-2 hidden" disabled id="mdlTaskId">
-              <input id="mdlDueDate" class=" form-control my-2" type="date">
-              <input id="mdlTitle" class="form-control my-2" type="text" placeholder="Title">
-              <input id="mdlDesc" class="form-control my-2" type="text" placeholder="Description">
+
+              <div class="form-group">
+                <input id="mdlDueDate" class=" form-control my-2" type="date">
+
+                <span id="errDate" class="text-danger"></span>
+              </div>
+              <div class="form-group">
+                <input id="mdlTitle" class="form-control my-2" type="text" placeholder="Title">
+                <span id="errTitle" class="text-danger"></span>
+              </div>
+              <div class="form-group">
+                <input id="mdlDesc" class="form-control my-2" type="text" placeholder="Description">
+                <span id="errDesc" class="text-danger"></span>
+              </div>
               <input type="submit" value="Submit" class="btn btn-dark">
             </form>
           </dialog>
