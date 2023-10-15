@@ -394,12 +394,26 @@ async function finishTask(taskId){
             body: JSON.stringify(data)
         })
         if(deleteTask.ok){
-            generateTasks();
+            responseData = await deleteTask.json()
+            finishTaskUI(responseData.task)
+            //generateTasks();
         }
     }
     catch(err){
         console.log(err)
     }
+}
+
+function finishTaskUI(task){
+    console.log(task.taskId)
+    if(task.status == "Done"){
+        const element = $(`#task${task.taskId}`)
+        const firstChild = element.children().first()
+        firstChild.addClass("bg-success text-white")
+        firstChild.removeClass("bg-warning bg-danger")
+        
+    }
+
 }
 
 

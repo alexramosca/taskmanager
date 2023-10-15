@@ -118,7 +118,7 @@ router.patch('/done', async (req, res)=>{
     else {
         findTask.status = "Done";
         await findTask.save();
-        res.status(200).json({message: "Task updated succefully"})
+        res.status(200).json({message: "Task updated succefully", task: findTask})
     }
 })
 
